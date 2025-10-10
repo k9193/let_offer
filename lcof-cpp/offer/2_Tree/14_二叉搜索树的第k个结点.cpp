@@ -1,17 +1,14 @@
 /**
  * struct TreeNode {
- *	int val;
- *	struct TreeNode *left;
- *	struct TreeNode *right;
- *	TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *  int val;
+ *  struct TreeNode *left;
+ *  struct TreeNode *right;
+ *  TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
  * };
  */
-#include <memory>
+#include <vector>
 class Solution
 {
-    int count{0};
-    int result{-1};
-
 public:
     /**
      * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
@@ -22,28 +19,32 @@ public:
      * @return int整型
      */
 
-    void inOrder(TreeNode *proot, int k)
-    {
-        if (!proot)
-            return;
-        inOrder(proot->left, k);
-        ++count;
-        if (count == k)
-        {
-            result = proot->val;
-            return;
-        }
-        inOrder(proot->right, k);
-        return;
-    }
-
     int KthNode(TreeNode *proot, int k)
     {
-        if (proot == nullptr)
+        if (!proot)
             return -1;
-        count = 0;
-        result = -1;
-        inOrder(proot, k);
-        return result;
+        if (k < 1)
+            return -1;
+        vector<int> result;   // 存储遍历结果
+        stack<TreeNode *> st; // 显式栈（不是vector）
+        TreeNode *curr = proot;
+        while (curr != nullptr || !st.empty())
+        {
+            // 1. 将当前节点及其所有左子节点入栈
+            while (curr != nullptr)
+            {
+                st.push(curr);
+                curr = curr->left;
+            }
+            // 2. 弹出栈顶节点并访问
+            curr = st.top();
+            st.pop();
+            result.push_back(curr->val);
+            // 3. 转向右子树
+            curr = curr->right;
+        }
+        if (k > result.size())
+            return -1;
+        return result[k - 1];
     }
 };
