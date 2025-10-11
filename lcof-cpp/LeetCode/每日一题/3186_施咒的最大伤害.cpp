@@ -33,3 +33,46 @@ public:
         return std::max(dp[n - 1][0], dp[n - 1][1]);
     }
 };
+
+class Solution
+{
+public:
+    long long maximumTotalDamage(vector<int> &power)
+    {
+        vector<long long> dp(4, 0);
+        ranges::sort(power);
+        dp[3] = power[0];
+        for (int i = 1; i < power.size(); ++i)
+        {
+            if (power[i] == power[i - 1])
+            {
+                dp[3] += power[i];
+            }
+            else if (power[i] == power[i - 1] + 1)
+            {
+                // [x,y,z,0] ->[x,y,z,0,1]-> [max(x,y),z,0,x+power[i]] 需要保证是合法状态 xyz至少差1
+                dp[0] = std::max(dp[0], dp[1]);
+                dp[1] = dp[2];
+                dp[2] = dp[3];
+                dp[3] = dp[0] + power[i];
+            }
+            else if (power[i] == power[i - 1] + 2)
+            {
+                // [x,y,z,0]  ->[x,y,z,0,2]-> [max(x,y,z),0, 0, x+power[i]]
+                dp[0] = max({dp[0], dp[1], dp[2]});
+                dp[1] = dp[3];
+                dp[2] = dp[3];
+                dp[3] = dp[0] + power[i];
+            }
+            else
+            {
+                // [x,y,z,0]  ->[x,y,z,0,3]-> [max(x,y,z,0),0, 0, x+power[i]]
+                dp[0] = max({dp[0], dp[1], dp[2], dp[3]});
+                dp[1] = dp[3];
+                dp[2] = dp[3];
+                dp[3] = dp[0] + power[i];
+            }
+        }
+        return ranges::max(dp);
+    }
+};
