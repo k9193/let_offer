@@ -40,7 +40,7 @@ class Solution:
                 if height[left] >= left_max:
                     left_max = height[left]
                 else:
-                    total_water += left_max - height[left]
+                    total_water += left_max - height[left] # 因为右边有更高的 所以可以蓄水 所以只需要计算左边最大值-自己高度 就是蓄水量了
                 left += 1
             else:
                 if height[right] >= right_max:
