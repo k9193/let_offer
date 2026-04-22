@@ -22,7 +22,7 @@ public:
         {
             if (s.find(x - 1) != s.end())
                 continue;
-            // x是开头bianli
+            // x是开头
             int cur = x;
             int len = 1;
             while (s.find(cur + 1) != s.end())
